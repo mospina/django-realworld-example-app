@@ -1,0 +1,101 @@
+digraph apps {
+  graph [];
+  node [shape = "box"];
+  edge [];
+  
+  subgraph cluster_articles {
+    label = "apps.articles";
+
+    // nodes
+    articles_init [label="__init__"]
+    articles_models [label="models"]
+    articles_relations [label="relations"]
+    articles_serializers [label="serializers"]
+    articles_urls [label="urls"]
+    articles_renderers [label="renderers"]
+    articles_signals [label="signals"]
+    articles_views [label="views"]
+
+    articles_init -> articles_signals
+    articles_models -> articles_models
+    articles_relations -> articles_models
+    articles_serializers -> articles_models
+    articles_serializers -> articles_relations
+    articles_urls -> articles_views
+    articles_signals -> articles_models
+    articles_views -> articles_models
+    articles_views -> articles_renderers
+    articles_views -> articles_serializers
+  }  
+
+  subgraph cluster_core {
+    label = "apps.core";
+
+    // nodes
+    core_exceptions [label="exceptions"]
+    core_init [label="__init__"]
+    core_models [label="models"]
+    core_renderers [label="renderers"]
+    core_utils [label="utils"]
+    
+    // relationships
+  }
+
+  subgraph cluster_profiles {
+    label = "apps.profiles";
+
+    // nodes
+    profiles_exceptions [label="exceptions"]
+    profiles_init [label="__init__"]
+    profiles_models [label="models"]
+    profiles_renderers [label="renderers"]
+    profiles_serializers [label="serializers"]
+    profiles_urls [label="urls"]
+    profiles_views [label="views"]
+
+    // relationships
+    profiles_serializers -> profiles_models
+    profiles_urls -> profiles_views
+    profiles_views -> profiles_models
+    profiles_views -> profiles_renderers
+    profiles_views -> profiles_serializers
+  }
+
+  subgraph cluster_authentication {
+    label = "apps.authentication";
+
+    // nodes
+    authentication_backends [label="backends"]
+    authentication_init [label="__init__"]
+    authentication_models [label="models"]
+    authentication_renderers [label="renderers"]
+    authentication_serializers [label="serializers"]
+    authentication_urls [label="urls"]
+    authentication_signals [label="signals"]
+    authentication_views [label="views"]
+
+    // relationships
+    authentication_init -> authentication_signals
+    authentication_backends -> authentication_models
+    authentication_serializers -> authentication_models
+    authentication_urls -> authentication_views
+    authentication_signals -> authentication_models
+    authentication_views -> authentication_renderers
+    authentication_views -> authentication_serializers
+  }
+
+  // All classes (Article, Comment, Tag) inherit from core.TimestampedModel
+  articles_models -> core_models 
+  articles_models -> profiles_models // profiles.Profile as foreignKey
+  articles_serializers -> profiles_serializers
+  // All classes (ArticleJSONRenderer, CommentJSONRenderer) inherit from core.ConduitJSONRendered
+  articles_renderers -> core_renderers
+  articles_signals -> core_utils
+  authentication_serializers -> profiles_serializers
+  authentication_models -> core_models
+  authentication_renderers -> core_renderers
+  authentication_signals -> profiles_models
+  profiles_models -> core_models
+  profiles_models -> authentication_models // authentication.User is OneToOneField
+  profiles_renderers -> core_renderers
+}

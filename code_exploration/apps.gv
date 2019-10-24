@@ -1,0 +1,20 @@
+digraph apps {
+  graph [];
+  node [shape = "box"];
+  edge [];
+
+  // nodes
+
+  articles [label="articles"]
+  authentication [label="authentication"]
+  core [label="core"]
+  profiles [label="profiles"]
+
+  // relationships
+  articles -> core
+  articles -> profiles  
+  authentication -> profiles
+  authentication -> core
+  profiles -> core
+  profiles -> authentication
+}
