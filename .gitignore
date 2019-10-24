@@ -23,6 +23,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+VENV/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -90,3 +91,6 @@ ENV/
 
 # SQLite3
 db.sqlite3
+
+# code exploration
+code_exploration/*.png
